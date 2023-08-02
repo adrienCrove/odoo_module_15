@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+
+        <template id="list_courrier" name="courrier">
+          <t t-call="website.layout">
+            <!-- PRÉSENTATION -->
+            <tbody>
+              <div class="container">
+                <div class="row">
+                  <div class="col-xs-12">
+                  <h1>Liste du courrier entrant et sortant</h1>
+                    <table class="table table-bordered">
+                        <tr>
+                           <th class="article">Reference</th>
+                           <th class="entete">Expediteur</th>
+                           <th class="entete">Objet du courriel</th>
+                           <th class="entete">Date de réception</th>
+                        </tr>
+                        <t t-foreach="Liste_du_courrier" t-as="c">
+                        <tr>
+                            <td><t t-esc="c.ref"/></td>                      
+                            <td><t t-esc="c.sender_courriel.name"/></td>
+                            <td><t t-esc="dict(c.fields_get(allfields=['object_courriel'])['object_courriel']['selection'])[c.object_courriel]"/></td>
+                            <td><t t-esc="c.date_receipt_courriel"/></td>
+                            <td>
+                                <a t-attf-href="#">
+                                  <i class="fa fa-pencil-alt"></i>
+                                </a>
+                                <a t-attf-href="#{ root }/objects/#{ c.id }">
+                                  <i class="fa fa-eye"></i>
+                                </a>
+                                <a t-attf-href="#">
+                                  <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </td>     
+                        </tr>
+                        </t>  
+                    </table>                  
+                  </div>             
+                </div>
+              </div> 
+            </tbody>          
+          </t>
+       <!--    <ul>
+            <li t-foreach="objects" t-as="object">
+              <a t-attf-href="#{ root }/objects/#{ object.id }">
+                <t t-esc="object.display_name"/>
+              </a>
+            </li>
+          </ul> -->
+        </template>
+        <!-- <template id="object">
+          <h1><t t-esc="object.display_name"/></h1>
+          <dl>
+            <t t-foreach="object._fields" t-as="field">
+              <dt><t t-esc="field"/></dt>
+              <dd><t t-esc="object[field]"/></dd>
+            </t>
+          </dl>
+        </template> -->
+        <template id="listing">
+            <ul>
+            <li t-foreach="objects" t-as="object">
+              <a t-attf-href="#{ root }/objects/#{ object.id }">
+                <t t-esc="object.ref"/>                  
+              </a>
+            </li>
+            <li><t t-esc="object.sender_courriel.name"/></li>
+            <li><t t-esc="object.date_receipt_courriel"/></li>
+          </ul>
+        </template>
+    </data>
+</odoo>

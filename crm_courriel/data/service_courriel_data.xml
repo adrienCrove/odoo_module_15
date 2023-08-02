@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_notification_courriel" model="mail.template">
+            <field name="name">Courriel: Send by email</field>
+            <field name="model_id" ref="crm_courriel.model_service_courriel"/>
+            <field name="subject">{{ object.object_courriel}} de {{object.sender_courriel.name}} - (Ref {{ object.ref or 'n/a' }})</field>
+            <field name="email_from">{{ (object.sender_courriel.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.sender_courriel.id }}</field>
+            <field name="report_name">{{ (object.cr_name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.sender_courriel.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+            <p style="box-sizing:border-box;margin: 0px; padding: 0px; font-size: 13px;">bjr Monsieur Lionel<br>Voici le compte rendu <br>
+                Nous restons à votre disposition pour toute question complémentaire.</p>
+            <p style="box-sizing:border-box;margin: 0px; padding: 0px; font-size: 13px;"><br></p>
+            <table class="table table-bordered" style="border-style:solid;margin:0 0 12px 0;box-sizing:border-box;table-layout:fixed;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-top-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-width:1px;color:#495057;width:100%;border-collapse:collapse;" width="100%">
+                <tbody>
+                    <tr>
+                        <td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">Reference</td>
+                        <td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">Objet du courriel</td>
+                        <td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">Expediteur</td>
+                        <td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">Date de reception</td>
+                    </tr>
+                    <tr>
+                        <td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">
+
+                            <t t-if="object.ref" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-group-active="true" data-oe-t-inline="true">
+                                <strong t-out="object.ref or ''" contenteditable="false" oe-keep-contenteditable="">INV/2021/05/0005</strong>
+                            </t>
+
+                            <br></td><td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">
+
+                            <t t-if="object.object_courriel" data-oe-t-group="1" data-oe-t-selectable="true" data-oe-t-group-active="true" data-oe-t-inline="true">
+                                <strong t-out="object.object_courriel or ''" contenteditable="false" oe-keep-contenteditable="">INV/2021/05/0005</strong>
+                            </t>
+                            <br></td><td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">
+
+                            <t t-if="object.sender_courriel.name" data-oe-t-group="2" data-oe-t-selectable="true" data-oe-t-group-active="true" data-oe-t-inline="true">
+                                <strong t-out="object.sender_courriel.name or ''" contenteditable="false" oe-keep-contenteditable="">INV/2021/05/0005</strong>
+                            </t>
+                            <br></td><td style="border-style:solid;padding:9px;box-sizing:border-box;border-left-color:#e9ecef;border-bottom-color:#e9ecef;border-right-color:#e9ecef;border-left-width:1px;border-bottom-width:1px;border-right-width:1px;border-top-color:#e9ecef;border-top-width:1px;vertical-align:top;">
+
+                            <t t-if="object.date_receipt_courriel" data-oe-t-group="3" data-oe-t-selectable="true" data-oe-t-group-active="true" data-oe-t-inline="true">
+                                <strong t-out="object.date_receipt_courriel or ''" contenteditable="false" oe-keep-contenteditable="">INV/2021/05/0005</strong>
+                            </t>
+                            <br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>                         
+            </field>
+            <!-- <field name="report_template">{{object.cr_attachment}}</field> -->
+        </record>
+    </data>
+</odoo>

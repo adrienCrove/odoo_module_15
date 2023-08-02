@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <!-- code courriel sortant -->
+        <record id="sequence_courriel_code" model="ir.sequence">
+           <field name="name">courriel code sequence</field>
+           <field name="code">sequence.courriel.code</field>
+           <field name="active">TRUE</field>
+           <field name="prefix">REF%(y)s%(month)s%(day)s</field>
+           <field name="padding">6</field>
+           <field name="number_next">1</field>
+           <field name="number_increment">1</field>
+        </record>
+        <record id="mail_notification_courriel" model="mail.template">
+            <field name="name">Courriel: Send by email</field>
+            <field name="model_id" ref="crm_courriel.model_service_courriel"/>
+            <field name="subject">{{ object.object_courriel}} de {{object.sender_courriel.name}} - (Ref {{ object.ref or 'n/a' }})</field>
+            <field name="email_from">{{ (object.sender_courriel.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.sender_courriel.id }}</field>
+            <field name="report_name">{{ (object.cr_name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.sender_courriel.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <p>Dear ${object.sender_courriel.name}</p>
+                    <p>
+                     Je vous remercie pour le mail que vous avez délivré
+                    </p>
+                    <p>You can reply to this email if you have any questions.</p>
+                    <p>Thank you,</p>
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Bonjour, voici un rapport du courrier reçu
+                        <br/><br/>                  
+                        N'hesité pas de me contacter si vous avez une question.
+                        <br/><br/>
+                    </p>
+                    <div style="margin: 0px; padding: 0px;">
+                            <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                                <tr style="border-bottom: 2px solid #dee2e6;">
+                                    <!-- <td style="width: 150px;"><strong>Reference</strong></td> -->
+                                    <td width="25%" align="left"><strong>Reference</strong></td>
+                                    <td></td>
+                                    <td width="25%" align="center"><strong>Expediteur</strong></td>
+                                    <td width="25%" align="right"><strong>Objet du courrier</strong></td>
+                                    <td width="25%" align="right"><strong>Date de délivrance</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                </div>
+            </field>
+            <!-- <field name="report_template">{{object.cr_attachment}}</field> -->
+        </record>
+    </data>
+</odoo>

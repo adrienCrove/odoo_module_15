@@ -1,0 +1,144 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="received_courriel_list">
+      <field name="name">received courriel list</field>
+      <field name="model">service.courriel</field>
+      <field name="arch" type="xml">
+        <tree string="Liste des courriels entrant et sortant">
+          <field name="ref"/>
+          <field name="sender_courriel"/>
+          <field name="object_courriel"/>
+          <field name="date_receipt_courriel"/>
+          <field name="state"  decoration-success="state == 'received'" decoration-info="state == 'draft' or state == 'send'" widget="badge" optional="show"/>
+          <button name="action_confirm_issue" string="Validation" type="object" class="oe_highlight" attrs="{'invisible':[('state','!=', 'emp_ass')]}"/>
+        </tree>
+      </field>
+    </record>
+    <!-- form view  -->
+    <record model="ir.ui.view" id="received_courriel_form">
+        <field name="name">received courriel form</field>
+        <field name="model">service.courriel</field>
+        <field name="arch" type="xml">
+            <form string="Suivi du courrier">
+             <header>
+                    <button name="check_courriel" string="Assignation département" type="object" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
+                    <!-- <button string="Valider" type="object" class="oe_highlight" attrs="{'invisible':[('state','!=','received')]}"/> -->
+                    <button name="action_courriel_send" string="Envoyer rapport" type="object" states="received,sendmail" class="oe_highlight" attrs="{'invisible':[('state','=','draft')]}"/>
+                    <button name="action_confirm_issue" string="Confirmation" type="object" states="emp_ass" class="oe_highlight"/>
+                    <button name="action_assign_department" string="Assignation employé" type="object" class="oe_highlight" attrs="{'invisible':[('state','!=','received')]}"/>
+                    <button name="action_retour" string="retour" type="object" class="oe_highlight" attrs="{'invisible':[('state','=','draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,received,emp_ass,send" attrs="{'invisible': [('courriel_type','=', 'delivry')]}"/>
+                    <field name="state_out" widget="statusbar" statusbar_visible="draft,send" attrs="{'invisible': [('courriel_type','=', 'receipt')]}"/>
+              </header>
+              <sheet>
+                  <!--<div class="oe_button_box" name="button_box">
+                      <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                          <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                      </button>
+                  </div> -->
+                  <div class="oe_title mb24">
+                        <field name="courriel_type" widget="radio" options="{'horizontal': true}" invisible="0"/>
+                        <field name="is_io" invisible="1"/>
+                        <h1>
+                            <field id ="entrant" class="text-break" name="ref"  default_focus="1" placeholder="e.g. REF/VO.... Entrant"  attrs="{'required': [('courriel_type','=', 'receipt')],'invisible': [('courriel_type','=', 'delivry')]}"/>
+                            <field id ="sortant" class="text-break" name="ref"  default_focus="1" placeholder="e.g. REF/VO.... Sortant"  attrs="{'invisible': [('courriel_type','=', 'receipt')]}"/>
+                        </h1>
+                        <field name="ref_auto" invisible="0"/>
+                    </div>
+                   <group>
+                        <group attrs="{'readonly': [('state','!=', 'draft')]}">
+                          <field name="object_courriel"  attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="cr_attachment" filename="cr_name" widget="download_link" required="1"/>
+                          <field name="cr_name" invisible="1"/>
+                          <field name="priority"  attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="description_courriel"/>
+                        </group>
+                        <group attrs="{'readonly': [('state','!=', 'draft')]}">
+                          <field name="date_receipt_courriel" string="Date de réception" attrs="{'invisible': [('courriel_type','=', 'delivry')],'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="date_receipt_courriel" string="Date de délivrance" attrs="{'invisible': [('courriel_type','=', 'receipt')], 'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="sender_courriel" string="Expediteur" attrs="{'invisible': [('courriel_type','=', 'delivry')],'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="sender_courriel" string="Destinataire" attrs="{'invisible': [('courriel_type','=', 'receipt')], 'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="user_id" readonly="1" string="Receptionné par" attrs="{'invisible': [('courriel_type','=', 'delivry')], 'readonly': [('state','!=', 'draft')]}"/>
+                          <field name="user_id" readonly="1" string="Délivré par" attrs="{'invisible': [('courriel_type','=', 'receipt')], 'readonly': [('state','!=', 'draft')]}"/>
+                        </group>
+                        <!-- <group string="Information destinataire" attrs="{'invisible': ['|',('state','in', ['draft']), ('is_io','!=', False)]}">
+                          <field name="issued_to"/>
+                          <field name="signature_recipient"/>
+                        </group> -->
+                        <group string="Assignation du courrier" attrs="{'invisible': ['|',('state','in', ['draft']), ('is_io','!=', False)]}">
+                          <field name="dept_employee" string="département sollicité" attrs="{'invisible': ['|',('state','=', 'draft'), ('is_io','!=', False)], 'required':[('state','=', 'received')], 'readonly':[('state','!=', 'received')]}"/>
+                          <field name="notes" string="Notes" attrs="{'invisible': ['|',('state','=', 'draft'), ('is_io','!=', False)], 'readonly':[('state','!=', 'received')]}"/>
+                          <field name="employee_name" domain="[('department_id.id', '=', dept_employee)]" string="Employé sollicité" attrs="{'invisible': ['|',('state','not in', ['emp_ass','send']), ('is_io','!=', False)],'readonly':[('state','=','send')], 'required':[('state','=', 'send')]}"/>
+                          <field name="date_of_issue"/>
+                        </group>                        
+                   </group>
+              </sheet>
+               <!-- Attachment preview -->
+                    <div class="o_attachment_preview"/>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+            </form>
+        </field>
+      </record>
+    <!-- search view  -->
+    <record id="view_received_courriel_search" model="ir.ui.view">
+            <field name="name">received courriel search</field>
+            <field name="model">service.courriel</field>
+            <field name="arch" type="xml">
+                <search string="Courriel">
+                    <field name="ref" string="Reference du courriel"/>
+                    <field name="object_courriel"/>
+                    <separator/>
+                    <filter string="Mes courriers" name="my_courriel" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                </search>
+            </field>
+    </record>
+
+     <record id="action_courriel_send" model="ir.actions.server">
+            <field name="name">Envoyer rapport</field>
+            <field name="model_id" ref="model_service_courriel"/>
+            <field name="binding_model_id" ref="crm_courriel.model_service_courriel"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">            
+                    action = model.action_courriel_send()
+            </field>
+        </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="receipt_courriel_action_window">
+        <field name="name">Service Courrier</field>
+        <field name="res_model">service.courriel</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Cliquer pour enregistrer un nouveau courriel.
+          </p>
+          <p>                  
+            Pour une meilleur gestion et optimisation de ses activités,
+            il est nécessaire pour l'entreprise d'avoir un traçabilité de son courrier
+            que ce soit entrant ou sortant.
+          </p>
+        </field>
+    </record>
+    <!-- Top menu item -->
+    <menuitem name="Service courrier" id="courriel_menu_root" action="receipt_courriel_action_window" sequence="17" />
+    <menuitem name="Courrier Entrant" id="receipt_courriel" parent="point_of_sale.menu_point_root" action="receipt_courriel_action_window"/>
+    <menuitem name="Courrier Sortant" id="outgoing_courriel" parent="courriel_menu_root" sequence="2"/>
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="crm_courriel.menu_1_list" parent="crm_courriel.menu_1"
+              action="crm_courriel.action_window"/>
+    <menuitem name="Server to list" id="crm_courriel" parent="crm_courriel.menu_2"
+              action="crm_courriel.action_server"/>
+-->
+  </data>
+</odoo>

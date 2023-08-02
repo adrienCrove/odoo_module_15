@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="w_inherited_view_company_form">
+        <field name="name">w.inherited.view.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_header']" position="after">
+                <field name="advertising_banner" filename="fname" widget="download_link" class="oe_inline"/>
+                <field name="fname" invisible="1"/>                                        
+            </xpath>
+        </field>
+    </record>        
+</odoo>

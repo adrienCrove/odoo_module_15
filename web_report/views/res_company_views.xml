@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="w_inherited_view_company_form">
+        <field name="name">w.inherited.view.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page" position="after">
+                <page string="Modification report" name="update_report">
+                        <group>
+                            <group>
+                                <field name="advertising_banner" filename="fname" widget="download_link" class="oe_inline"/>
+                                <field name="fname" invisible="1"/>
+                            </group>
+                        </group>
+                </page>                                        
+            </xpath>
+        </field>
+    </record>        
+</odoo>
